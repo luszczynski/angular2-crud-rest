@@ -1,78 +1,64 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-
-import { User } from '../shared/user';
-import { UsersService } from '../shared/users.service';
-import { BasicValidators } from '../../shared/basic-validators';
+import { Component, Input, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Todo } from "../shared/todo";
+import { TodoService } from "../shared/users.service";
 
 @Component({
-  selector: 'app-user-form',
-  templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.css']
+  selector: "app-user-form",
+  templateUrl: "./user-form.component.html",
+  styleUrls: ["./user-form.component.css"]
 })
 export class UserFormComponent implements OnInit {
-
   form: FormGroup;
   title: string;
-  user: User = new User();
+  todo: Todo = new Todo();
+  @Input() edit: boolean;
 
   constructor(
     formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private usersService: UsersService
+    private todoService: TodoService
   ) {
     this.form = formBuilder.group({
-      name: ['', [
-        Validators.required,
-        Validators.minLength(3)
-      ]],
-      email: ['', [
-        Validators.required,
-        BasicValidators.email
-        //Validators.pattern("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-      ]],
-      phone: [],
-      address: formBuilder.group({
-        street: ['', Validators.minLength(3)],
-        suite: [],
-        city: ['', Validators.maxLength(30)],
-        zipcode: ['', Validators.pattern('^([0-9]){5}([-])([0-9]){4}$')]
-      })
+      id: ['', [Validators.required, Validators.minLength(1)]],
+      content: ['', [Validators.required, Validators.minLength(3)]]
     });
   }
 
   ngOnInit() {
-    var id = this.route.params.subscribe(params => {
-      var id = params['id'];
+    const id = this.route.params.subscribe(params => {
+      this.edit = !!params.id;
+      this.title = this.edit ? 'Edit Todo' : 'New Todo';
 
-      this.title = id ? 'Edit User' : 'New User';
-
-      if (!id)
+      if (!this.edit) {
         return;
-
-      this.usersService.getUser(id)
-        .subscribe(
-          user => this.user = user,
+      } else {
+        this.todoService.getTodo(params.id).subscribe(
+          todo => {
+            this.todo.id = todo.id;
+            this.todo.content = todo.content;
+          },
           response => {
-            if (response.status == 404) {
-              this.router.navigate(['NotFound']);
+            if (response.status === 404) {
+              this.router.navigate(["NotFound"]);
             }
-          });
+          }
+        );
+      }
     });
   }
 
   save() {
-    var result,
-        userValue = this.form.value;
-
-    if (userValue.id){
-      result = this.usersService.updateUser(userValue);
+    let result;
+    const todoValue = this.form.value;
+    if (this.edit) {
+      result = this.todoService.updateTodo(todoValue);
     } else {
-      result = this.usersService.addUser(userValue);
+      result = this.todoService.addTodo(todoValue);
     }
 
-    result.subscribe(data => this.router.navigate(['users']));
+    result.subscribe(data => this.router.navigate(['todos']));
   }
 }

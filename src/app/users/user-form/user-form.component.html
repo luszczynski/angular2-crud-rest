@@ -4,76 +4,33 @@
     <div class="row">
       <div class="input-field col s12">
         <i class="material-icons prefix">account_circle</i>
-        <input id="name" type="text" class="validate"
-               [(ngModel)]="user.name" formControlName="name"
-               [class.invalid]="form.controls['name'].touched && !form.controls['name'].valid"
+
+        <input [attr.readonly]="true" *ngIf="edit" id="id" type="text"
+        [(ngModel)]="todo.id" formControlName="id" >
+
+        <input *ngIf="!edit" id="id" type="text" class="validate"
+               [(ngModel)]="todo.id" formControlName="id"
+               [class.invalid]="form.controls['id'].touched && !form.controls['id'].valid"
         >
-        <label for="name"
-               [class.active]="user.name"
-               data-error="Name is required and needs to contain at least 3 chars">
-          Name
+        <label *ngIf="!edit" for="id"
+               [class.active]="todo.id"
+               data-error="Id is required and needs to contain at least 1 chars">
+          ID
         </label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s12">
-        <i class="material-icons prefix">email</i>
-        <input id="email" type="email" class="validate"
-               [(ngModel)]="user.email" formControlName="email"
-               [class.invalid]="form.controls['email'].touched && !form.controls['email'].valid">
-        <label for="email"
-               [class.active]="user.email"
-               data-error="Invalid Email">
-          Email
+        <i class="material-icons prefix">account_circle</i>
+        <input id="content" type="text" class="validate"
+               [(ngModel)]="todo.content" formControlName="content"
+               [class.invalid]="form.controls['content'].touched && !form.controls['content'].valid"
+        >
+        <label for="content"
+               [class.active]="todo.content"
+               data-error="Content is required and needs to contain at least 3 chars">
+          Content
         </label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s12">
-        <i class="material-icons prefix">phone</i>
-        <input id="phone" type="text" class="validate"
-               [(ngModel)]="user.phone" formControlName="phone">
-        <label for="phone" [class.active]="user.phone">Phone</label>
-      </div>
-    </div>
-    <div formGroupName="address">
-      <div class="row">
-        <div class="input-field col s8">
-          <i class="material-icons prefix">place</i>
-          <input id="street" type="text" class="validate"
-                 [(ngModel)]="user.address.street" formControlName="street"
-                 [class.invalid]="form.controls['address'].controls['street'].touched
-                  && !form.controls['address'].controls['street'].valid">
-          <label for="street"
-                 [class.active]="user.address.street"
-                 data-error="Invalid Street">
-            Street
-          </label>
-        </div>
-        <div class="input-field col s4">
-          <input id="suite" type="text" class="validate"
-                 [(ngModel)]="user.address.suite" formControlName="suite">
-          <label for="suite" [class.active]="user.address.suite">Suite</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s8">
-          <i class="material-icons prefix">map</i>
-          <input id="city" type="text" class="validate"
-                 [(ngModel)]="user.address.city" formControlName="city">
-          <label for="city" [class.active]="user.address.city">City</label>
-        </div>
-        <div class="input-field col s4">
-          <input id="zipcode" type="text" class="validate"
-                 [(ngModel)]="user.address.zipcode" formControlName="zipcode"
-                 [class.invalid]="form.controls['address'].controls['zipcode'].touched
-                  && !form.controls['address'].controls['zipcode'].valid">
-          <label for="zipcode"
-                 [class.active]="user.address.zipcode"
-                 data-error="Invalid ZipCode">
-            ZipCode
-          </label>
-        </div>
       </div>
     </div>
     <button class="btn waves-effect waves-light" type="submit"

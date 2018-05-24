@@ -1,28 +1,28 @@
 <p>
-  Displaying {{ users.length }} users.
+  Displaying {{ todos.length }} TODOs.
 </p>
 
 <table>
   <thead>
   <tr>
-    <th data-field="name">Name</th>
-    <th data-field="name">Email</th>
+    <th data-field="name">ID</th>
+    <th data-field="name">Content</th>
     <th data-field="name">Edit</th>
     <th data-field="name">Delete</th>
   </tr>
   </thead>
 
   <tbody>
-    <tr *ngFor="let user of users">
-      <td>{{ user.name }}</td>
-      <td>{{ user.email }}</td>
+    <tr *ngFor="let todo of todos">
+      <td>{{ todo.id }}</td>
+      <td>{{ todo.content }}</td>
       <td>
-        <a [routerLink]="['/users', user.id]">
+        <a [routerLink]="['/todos', todo.id]">
           <i class="material-icons">mode_edit</i>
         </a>
       </td>
       <td>
-        <a (click)="deleteUser(user)" href="">
+        <a (click)="deleteTodo(todo)" [routerLink]="['/todos']">
           <i class="material-icons">delete</i>
         </a>
       </td>
@@ -32,7 +32,7 @@
 
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
   <a class="btn-floating btn-large waves-effect waves-light green"
-     routerLink="/users/new">
+     routerLink="/todos/new">
     <i class="material-icons">add</i>
   </a>
 </div>

@@ -1,36 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import {UsersService} from "./shared/users.service";
-import {User} from "./shared/user";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { Todo } from "./shared/todo";
+import { TodoService } from "./shared/users.service";
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+  selector: "app-users",
+  templateUrl: "./users.component.html",
+  styleUrls: ["./users.component.css"]
 })
 export class UsersComponent implements OnInit {
+  todos: Todo[] = [];
 
-  private users: User[] = [];
-
-  constructor(private usersService: UsersService) { }
+  constructor(private todoService: TodoService, private router: Router) {}
 
   ngOnInit() {
-    this.usersService.getUsers()
-      .subscribe(data => this.users = data);
+    this.todoService.getTodos().subscribe(data => {
+      this.todos = data;
+    });
   }
 
-  deleteUser(user){
-    if (confirm("Are you sure you want to delete " + user.name + "?")) {
-      var index = this.users.indexOf(user);
-      this.users.splice(index, 1);
+  deleteTodo(todo) {
+    if (confirm("Are you sure you want to delete " + todo.content + "?")) {
+      const index = this.todos.indexOf(todo);
+      this.todos.splice(index, 1);
 
-      this.usersService.deleteUser(user.id)
-        .subscribe(null,
-          err => {
-            alert("Could not delete user.");
-            // Revert the view back to its original state
-            this.users.splice(index, 0, user);
-          });
+      //this.router.navigate(['todos']);
+
+      this.todoService.deleteTodo(todo.id).subscribe(null, err => {
+        alert("Could not delete todo.");
+        // Revert the view back to its original state
+        this.todos.splice(index, 0, todo);
+      });
     }
   }
-
 }
